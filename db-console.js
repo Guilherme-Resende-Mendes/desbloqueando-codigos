@@ -1,6 +1,6 @@
 const sequelize = require('./config/database'); // Import your Sequelize instance
 const Tecnico = require('./models/Tecnico'); // Import your models
-const Peca = require('./models/Peca'); // Import your Peca model
+const Peca = require('./models/Pecas'); // Import your Peca model
 // ... importe outros modelos
 
 const repl = require('repl'); // Import the REPL module
