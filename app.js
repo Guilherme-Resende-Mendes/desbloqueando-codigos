@@ -6,7 +6,6 @@ const TecnicoController = require("./controllers/TecnicoController");
 const PecaController = require("./controllers/PecaController");
 const ConsertoController = require("./controllers/ConsertoController");
 const RelatorioController = require("./controllers/RelatorioController");
-const EstoqueController = require("./controllers/EstoqueController");
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,7 +15,6 @@ app.use("/tecnicos", TecnicoController);
 app.use("/pecas", PecaController);
 app.use("/consertos", ConsertoController);
 app.use("/relatorios", RelatorioController);
-app.use("/estoque", EstoqueController);
 
 // Sincronizar banco de dados
 // Mova a sincronização para antes de iniciar o servidor
