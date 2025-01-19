@@ -1,12 +1,12 @@
 const express = require('express');
-const Peca = require('../models/Peca');
+const peca = require('../models/Peca');
 const router = express.Router();
 
 // Criar peça
 router.post("/", async (req, res) => {
   try {
     const { descricao, codigo, qtdeEstoque, fornecedor } = req.body;
-    const peca = await Peca.create({ descricao, codigo, qtdeEstoque, fornecedor });
+    const Peca = await Peca.create({ descricao, codigo, qtdeEstoque, fornecedor });
     res.status(201).json(peca);
   } catch (error) {
     res.status(500).json({ error: "Erro ao criar peça", details: error.message });
@@ -15,8 +15,8 @@ router.post("/", async (req, res) => {
 
 // Listar peças
 router.get("/", async (req, res) => {
-  const pecas = await Peca.findAll();
-  res.json(pecas);
+  const peca = await Peca.findAll();
+  res.json(peca);
 });
 
 module.exports = router;

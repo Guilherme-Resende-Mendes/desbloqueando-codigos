@@ -5,25 +5,25 @@ const Peca = sequelize.define('Peca', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   descricao: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   codigo: {
     type: DataTypes.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
   },
   qtdeEstoque: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
   fornecedor: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 });
 
 module.exports = Peca;

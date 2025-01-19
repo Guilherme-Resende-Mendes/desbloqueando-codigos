@@ -1,23 +1,26 @@
-const sequelize = require('./config/database'); // Import your Sequelize instance
-const Tecnico = require('./models/Tecnico'); // Import your models
-const Peca = require('./models/Pecas'); // Import your Peca model
-// ... importe outros modelos
+const sequelize = require('./config/database'); // Importa a configuração do Sequelize
+const Tecnico = require('./models/Tecnico'); // Importa o modelo Técnico
+const Peca = require('./models/Peca'); // Importa o modelo Peca
+const Conserto = require('./models/Conserto'); // Importa o modelo Peca
 
-const repl = require('repl'); // Import the REPL module
+const repl = require('repl'); // Importa o módulo REPL
 
-// Connect to the database
+// Conecta ao banco de dados
 sequelize.authenticate()
-  .then(async () => {  // Adicione async aqui
+  .then(async () => {
     console.log('Connection has been established successfully.');
 
-    // Sincronize os modelos com o banco de dados
-    await sequelize.sync({ force: false }); // Adicione esta linha
+    // Sincroniza os modelos com o banco de dados
+    await sequelize.sync({ force: false });
 
-    // Start an interactive REPL session
+    // Inicia uma sessão REPL
     const r = repl.start('> ');
-    r.context.sequelize = sequelize; // Add Sequelize to the REPL context
-    r.context.Tecnico = Tecnico; // Add your models to the REPL context
-    // ... add other models as needed
+    r.context.sequelize = sequelize; // Adiciona o Sequelize ao contexto do REPL
+    r.context.Tecnico = Tecnico; // Adiciona o modelo Técnico ao contexto do REPL
+    r.context.Peca = Peca; // Adiciona o modelo Peca ao contexto do REPL
+    r.context.Conserto = Conserto; // Adiciona o modelo Conserto ao contexto do REPL
+
+    console.log('REPL iniciado. Você pode usar "Tecnico", "Peca" e "sequelize".');
   })
   .catch(err => {
     console.error('Unable to connect to the database:', err);
