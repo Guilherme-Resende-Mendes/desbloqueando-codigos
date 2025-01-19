@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 // Rotas
 app.use("/tecnicos", TecnicoController);
-app.use("/pecas", PecaController);
+app.use("/peca", PecaController);
 app.use("/consertos", ConsertoController);
 app.use("/relatorios", RelatorioController);
 

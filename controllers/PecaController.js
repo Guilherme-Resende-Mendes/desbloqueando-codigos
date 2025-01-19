@@ -1,6 +1,6 @@
 const express = require('express');
-const peca = require('../models/Peca');
 const router = express.Router();
+const Peca = require('../models/Peca');
 
 // Criar peça
 router.post("/", async (req, res) => {
