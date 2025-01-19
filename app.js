@@ -19,10 +19,13 @@ app.use("/relatorios", RelatorioController);
 app.use("/estoque", EstoqueController);
 
 // Sincronizar banco de dados
-sequelize.sync({ force: false })
-  .then(() => console.log("Banco sincronizado"))
-  .catch((err) => console.error("Erro ao sincronizar banco:", err));
+// Mova a sincronização para antes de iniciar o servidor
+sequelize.sync({ force: false }) 
+  .then(() => {
+    console.log("Banco sincronizado");
 
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
+    // Iniciar servidor
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
+  })
+  .catch((err) => console.error("Erro ao sincronizar banco:", err));
