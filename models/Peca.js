@@ -26,4 +26,36 @@ const Peca = sequelize.define('Peca', {
   },
 });
 
+// Método estático para criar uma nova peça
+Peca.criarPeca = async function (descricao, codigo, qtdeEstoque, fornecedor) {
+  return await Peca.create({ descricao, codigo, qtdeEstoque, fornecedor });
+};
+
+// Métodos de instância
+Peca.prototype.getDescricao = function () {
+  return this.descricao;
+};
+
+Peca.prototype.getCodigo = function () {
+  return this.codigo;
+};
+
+Peca.prototype.adicionarPeca = function (qtde) {
+  this.qtdeEstoque += qtde;
+  return this.save();
+};
+
+Peca.prototype.retirarPeca = function (qtde) {
+  if (this.qtdeEstoque >= qtde) {
+    this.qtdeEstoque -= qtde;
+    return this.save();
+  } else {
+    throw new Error('Quantidade insuficiente em estoque');
+  }
+};
+
+Peca.prototype.apagarPeca = function () {
+  return this.destroy();
+};
+
 module.exports = Peca;

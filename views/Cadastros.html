@@ -98,20 +98,134 @@
   <label for="responsavelId">Técnico Responsável:</label>
   <select id="responsavelId" name="responsavelId">
     <option value="">Selecione um técnico</option>
-    <?php
-      // Lógica para buscar técnicos da API e preencher o select
-      $tecnicos = json_decode(file_get_contents('http://localhost:3000/tecnicos'), true);
-      foreach ($tecnicos as $tecnico) {
-        echo "<option value=\"{$tecnico['id']}\">{$tecnico['nome']}</option>";
-      }
-    ?>
   </select><br><br>
 
   <button type="submit">Cadastrar</button>
 </form>
 
 <script>
+  // Função para buscar técnicos da API e preencher o select
+  async function carregarTecnicos() {
+    try {
+      const response = await fetch('http://localhost:3000/tecnicos');
+      const tecnicos = await response.json();
+      const selectTecnicos = document.getElementById('responsavelId');
+
+      tecnicos.forEach(tecnico => {
+        const option = document.createElement('option');
+        option.value = tecnico.id;
+        option.text = tecnico.nome;
+        selectTecnicos.add(option);
+      });
+    } catch (error) {
+      console.error('Erro ao buscar técnicos:', error); // Exibe o erro no console do navegador
+    }
+  }
+
+  // Chama a função para carregar os técnicos quando a página carrega
+  carregarTecnicos();
+
   // Funções JavaScript para lidar com os envios dos formulários (AJAX)
+  // Exemplo para o formulário de técnico:
+  const formTecnico = document.getElementById('form-tecnico');
+  formTecnico.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Impede o envio padrão do formulário
+
+    const nome = document.getElementById('nome').value;
+    const cpf = document.getElementById('cpf').value;
+    // ... (obter os valores dos outros campos)
+
+    try {
+      const response = await fetch('http://localhost:3000/tecnicos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nome: nome,
+          cpf: cpf,
+          // ... (outros dados do técnico)
+        })
+      });
+
+      if (response.ok) {
+        console.log('Técnico cadastrado com sucesso!');
+        // ... (lógica para exibir mensagem de sucesso ou atualizar a página)
+      } else {
+        console.error('Erro ao cadastrar técnico:', response.status);
+        // ... (lógica para exibir mensagem de erro)
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar técnico:', error);
+      // ... (lógica para exibir mensagem de erro)
+    }
+  });
+
+  // Cadastrar peça
+  const formPeca = document.getElementById('form-peca');
+  formPeca.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const descricao = document.getElementById('descricao').value;
+    const codigo = document.getElementById('codigo').value;
+    const qtdeEstoque = document.getElementById('qtdeEstoque').value;
+    const fornecedor = document.getElementById('fornecedor').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/pecas', {  // Rota para cadastrar peças
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ descricao, codigo, qtdeEstoque, fornecedor })
+      });
+
+      if (response.ok) {
+        console.log('Peça cadastrada com sucesso!');
+        // ... (lógica para exibir mensagem de sucesso ou atualizar a página)
+      } else {
+        console.error('Erro ao cadastrar peça:', response.status);
+        // ... (lógica para exibir mensagem de erro)
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar peça:', error);
+      // ... (lógica para exibir mensagem de erro)
+    }
+  });
+
+  // ... (código similar para os outros formulários)
+
+  // Cadastrar conserto
+  const formConserto = document.getElementById('form-conserto');
+  formConserto.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const numeroOS = document.getElementById('numeroOS').value;
+    const protocolo = document.getElementById('protocolo').value;
+    const nomeCliente = document.getElementById('nomeCliente').value;
+    const telefoneCliente = document.getElementById('telefoneCliente').value;
+    const equipamentoUtilizado = document.getElementById('equipamentoUtilizado').value;
+    const descricaoProblema = document.getElementById('descricaoProblema').value;
+    const responsavelId = document.getElementById('responsavelId').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/consertos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ numeroOS, protocolo, nomeCliente, telefoneCliente, equipamentoUtilizado, descricaoProblema, responsavelId })
+      });
+
+      if (response.ok) {
+        console.log('Conserto cadastrado com sucesso!');
+        // ... (lógica para exibir mensagem de sucesso ou atualizar a página)
+      } else {
+        const errorData = await response.json(); // Tenta obter a resposta JSON com detalhes do erro
+        console.error('Erro ao cadastrar conserto:', response.status, errorData);
+        // ... (lógica para exibir mensagem de erro, incluindo detalhes do erro)
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar conserto:', error);
+      // ... (lógica para exibir mensagem de erro)
+    }
+  });
 </script>
 
 </body>
