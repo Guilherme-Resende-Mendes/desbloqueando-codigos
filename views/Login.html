@@ -3,16 +3,19 @@
     <head>
         <title>Login</title>
         <link rel="stylesheet" href="../public/css/style.css">
+        <script src="login.js" defer></script>
     </head>
     <body>
         
         <h2>Desbloqueando Códigos</h2>
         <form id="form-login">
-            <label for="email">Usuário:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" required>
             <label for="senha">Senha:</label>
             <input type="password" id="senha" name="senha" required>
             <button type="submit">Entrar</button>
+
+            <p id="error-message" style="color: red; display: none;">Usuário ou senha inválidos.</p>
         </form>
     </body>
 </html>
