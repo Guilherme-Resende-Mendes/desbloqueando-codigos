@@ -2,18 +2,117 @@
 <html>
 <head>
   <title>Cadastros</title>
+  <style>
+    /* Estilos básicos para o formulário */
+    body {
+      font-family: sans-serif;
+    }
+    form {
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
-  <h1>Cadastros</h1>
-  <form id="form-tecnico">
-    <h2>Cadastrar Técnico</h2>
-    </form>
-  <form id="form-peca">
-    <h2>Cadastrar Peça</h2>
-    </form>
-  <form id="form-conserto">
-    <h2>Cadastrar Conserto</h2>
-    </form>
-  <script src="../public/js/script.js"></script>
+
+<h1>Cadastros</h1>
+
+<h2>Cadastrar Técnico</h2>
+<form id="form-tecnico">
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" name="nome" required><br><br>
+
+  <label for="cpf">CPF:</label>
+  <input type="text" id="cpf" name="cpf" required><br><br>
+
+  <label for="especialidades">Especialidades (separadas por vírgula):</label>
+  <input type="text" id="especialidades" name="especialidades"><br><br>
+
+  <label for="numero">Número:</label>
+  <input type="text" id="numero" name="numero"><br><br>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email"><br><br>
+
+  <label for="logradouro">Logradouro:</label>
+  <input type="text" id="logradouro" name="logradouro"><br><br>
+
+  <button type="submit">Cadastrar</button>
+</form>
+
+<h2>Cadastrar Peça</h2>
+<form id="form-peca">
+  <label for="descricao">Descrição:</label>
+  <input type="text" id="descricao" name="descricao" required><br><br>
+
+  <label for="codigo">Código:</label>
+  <input type="text" id="codigo" name="codigo" required><br><br>
+
+  <label for="qtdeEstoque">Quantidade em Estoque:</label>
+  <input type="number" id="qtdeEstoque" name="qtdeEstoque" required><br><br>
+
+  <label for="fornecedor">Fornecedor:</label>
+  <input type="text" id="fornecedor" name="fornecedor" required><br><br>
+
+  <button type="submit">Cadastrar</button>
+</form>
+
+<h2>Cadastrar Conserto</h2>
+<form id="form-conserto">
+  <label for="numeroOS">Número da OS:</label>
+  <input type="number" id="numeroOS" name="numeroOS" required><br><br>
+
+  <label for="protocolo">Protocolo:</label>
+  <input type="text" id="protocolo" name="protocolo"><br><br>
+
+  <label for="nomeCliente">Nome do Cliente:</label>
+  <input type="text" id="nomeCliente" name="nomeCliente" required><br><br>
+
+  <label for="telefoneCliente">Telefone do Cliente:</label>
+  <input type="text" id="telefoneCliente" name="telefoneCliente"><br><br>
+
+  <label for="equipamentoUtilizado">Equipamento Utilizado:</label>
+  <input type="text" id="equipamentoUtilizado" name="equipamentoUtilizado" required><br><br>
+
+  <label for="descricaoProblema">Descrição do Problema:</label>
+  <textarea id="descricaoProblema" name="descricaoProblema" required></textarea><br><br>
+
+  <label for="responsavelId">Técnico Responsável:</label>
+  <select id="responsavelId" name="responsavelId">
+    <option value="">Selecione um técnico</option>
+    <?php
+      // Lógica para buscar técnicos da API e preencher o select
+      $tecnicos = json_decode(file_get_contents('http://localhost:3000/tecnicos'), true);
+      foreach ($tecnicos as $tecnico) {
+        echo "<option value=\"{$tecnico['id']}\">{$tecnico['nome']}</option>";
+      }
+    ?>
+  </select><br><br>
+
+  <button type="submit">Cadastrar</button>
+</form>
+
+<script>
+  // Funções JavaScript para lidar com os envios dos formulários (AJAX)
+</script>
+
 </body>
 </html>

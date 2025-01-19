@@ -34,4 +34,47 @@ const Tecnico = sequelize.define('Tecnico', {
   }
 });
 
+// Métodos da classe (instâncias)
+Tecnico.prototype.getNome = function() {
+  return this.nome;
+};
+
+Tecnico.prototype.getCPF = function() {
+  return this.cpf;
+};
+
+Tecnico.prototype.getID = function() {
+  return this.id;
+};
+
+Tecnico.prototype.addEspecialidade = function(especialidade) {
+  if (this.especialidades) {
+    this.especialidades.push(especialidade);
+  } else {
+    this.especialidades = [especialidade];
+  }
+  return this.save();
+};
+
+Tecnico.prototype.retirarEspecialidade = function(especialidade) {
+  if (this.especialidades) {
+    this.especialidades = this.especialidades.filter(esp => esp !== especialidade);
+  }
+  return this.save();
+};
+
+Tecnico.prototype.mandarEmail = function() {
+  // Implemente a lógica para enviar email aqui
+  console.log(`Enviando email para ${this.email}`);
+};
+
+Tecnico.prototype.apagarRegistro = function() {
+  return this.destroy();
+};
+
+// Método estático para criar um novo técnico
+Tecnico.criarTecnico = async function(nome, cpf, especialidades, numero, email, logradouro) {
+  return await Tecnico.create({ nome, cpf, especialidades, numero, email, logradouro });
+};
+
 module.exports = Tecnico;
