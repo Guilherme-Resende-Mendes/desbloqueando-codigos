@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Peca = require('./Peca');
 
 const Estoque = sequelize.define('Estoque', {
   id: {
@@ -7,12 +8,8 @@ const Estoque = sequelize.define('Estoque', {
     autoIncrement: true,
     primaryKey: true
   },
-  pecaId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  quantidade: {
-    type: DataTypes.INTEGER,
+  pecas: {
+    type: DataTypes.JSON,
     allowNull: false
   }
 });

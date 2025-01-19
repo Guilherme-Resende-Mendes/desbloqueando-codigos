@@ -35,6 +35,10 @@ const Conserto = sequelize.define('Conserto', {
   status: {
     type: DataTypes.STRING,
     defaultValue: "Pendente"
+  },
+  pecasUtilizadas: {
+    type: DataTypes.JSON,
+    allowNull: true
   }
 });
 

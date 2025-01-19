@@ -31,4 +31,21 @@ router.get("/produtividade", async (req, res) => {
   }
 });
 
+router.get('/exportar', (req, res) => {
+    const { relatorio, formato } = req.query;
+    if (formato === 'CSV') {
+      const csvData = gerarRelatorioCSV(relatorio);
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="relatorio.csv"');
+      res.send(csvData);
+    } else if (formato === 'PDF') {
+      const pdfData = gerarRelatorioPDF(relatorio);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="relatorio.pdf"');
+      res.send(pdfData);
+    } else {
+      res.status(400).json({ error: 'Formato inválido' });
+    }
+  });
+
 module.exports = router;

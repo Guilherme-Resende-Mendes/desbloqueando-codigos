@@ -15,6 +15,7 @@ app.use("/tecnicos", TecnicoController);
 app.use("/peca", PecaController);
 app.use("/consertos", ConsertoController);
 app.use("/relatorios", RelatorioController);
+app.use(express.static('public'));
 
 // Sincronizar banco de dados
 // Mova a sincronização para antes de iniciar o servidor
