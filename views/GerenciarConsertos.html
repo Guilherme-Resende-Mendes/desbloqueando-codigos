@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Consertos</title>
+</head>
+<body>
+
+<h1>Gerenciar Consertos</h1>
+
+<h2>Lista de Consertos</h2>
+<ul id="lista-consertos"></ul>
+
+<script defer>
+  const API_URL = '/consertos';
+
+  // Função para carregar consertos
+  async function carregarConsertos() {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`Erro ao obter consertos: ${response.statusText}`);
+      }
+      const consertos = await response.json();
+      const listaConsertos = document.getElementById('lista-consertos');
+      listaConsertos.innerHTML = '';
+
+      consertos.forEach(conserto => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <b>OS nº ${conserto.numeroOS}</b><br>
+          Cliente: ${conserto.nomeCliente}<br>
+          Equipamento: ${conserto.equipamentoUtilizado}<br>
+          Status: ${conserto.status}<br>
+          Responsável: ${conserto.responsavel ? conserto.responsavel.nome : 'Não atribuído'}<br>
+          <button onclick="atualizarStatus(${conserto.id})">Atualizar Status</button>
+          <button onclick="excluirConserto(${conserto.id})">Excluir</button>
+        `;
+        listaConsertos.appendChild(li);
+      });
+    } catch (error) {
+      alert(`Erro ao carregar consertos: ${error.message}`);
+    }
+  }
+
+  // Função para atualizar o status do conserto
+  async function atualizarStatus(id) {
+    const novoStatus = prompt('Digite o novo status (Pendente, Em Andamento, Concluído):');
+    if (!novoStatus) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ novoStatus }),
+      });
+      if (!response.ok) {
+        throw new Error(`Erro ao atualizar status: ${response.statusText}`);
+      }
+      alert('Status atualizado com sucesso!');
+      carregarConsertos();
+    } catch (error) {
+      alert(`Erro ao atualizar status: ${error.message}`);
+    }
+  }
+
+  // Função para excluir conserto
+  async function excluirConserto(id) {
+    if (!confirm(`Tem certeza que deseja excluir o conserto com OS nº ${id}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error(`Erro ao excluir conserto: ${response.statusText}`);
+      }
+      alert('Conserto excluído com sucesso!');
+      carregarConsertos();
+    } catch (error) {
+      alert(`Erro ao excluir conserto: ${error.message}`);
+    }
+  }
+
+  // Carrega a lista de consertos ao carregar a página
+  document.addEventListener('DOMContentLoaded', carregarConsertos);
+</script>
+
+</body>
+</html>
