@@ -16,7 +16,7 @@ document.getElementById('form-login').addEventListener('submit', function(event)
     // Verificando se as credenciais estão corretas
     if (username === validUsername && password === validPassword) {
         alert('Login bem-sucedido!');
-        window.location.href = "Cadastros.html";  // Redireciona para a página inicial (home.html)
+        window.location.href = "Home.html";  // Redireciona para a página inicial (home.html)
     } else {
         // Exibindo mensagem de erro se as credenciais estiverem incorretas
         document.getElementById('error-message').style.display = 'block';
