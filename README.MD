@@ -5,6 +5,7 @@ Este projeto é um gerenciador de consertos.
 ## Funcionalidades
 
 * Cadastro de técnicos
+* Gerenciamento de técnicos
 * Cadastro de peças
 * Gerenciamento de estoque
 * Registro de consertos
@@ -16,6 +17,10 @@ Este projeto é um gerenciador de consertos.
 * Express
 * Sequelize
 * SQLite
+* PHP
+* HTML
+* CSS
+* JavaScript
 
 ## Como Executar
 
