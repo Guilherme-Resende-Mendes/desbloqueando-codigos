@@ -50,34 +50,21 @@
   <label for="tecnicoId">Técnico:</label>
   <select id="tecnicoId" name="tecnicoId">
     <option value="">Selecione um técnico</option>
+    <?php
+      // Lógica para buscar técnicos da API e preencher o select
+      $tecnicos = json_decode(file_get_contents('http://localhost:3000/tecnicos'), true);
+      foreach ($tecnicos as $tecnico) {
+        echo "<option value=\"{$tecnico['id']}\">{$tecnico['nome']}</option>";
+      }
+    ?>
   </select><br><br>
   <button type="submit">Gerar Relatório</button>
 </form>
 
-<div id="relatorio"></div>
+<div id="relatorio">
+  </div>
 
 <script>
-  // Função para buscar técnicos da API e preencher o select
-  async function carregarTecnicos() {
-    try {
-      const response = await fetch('http://localhost:3000/tecnicos');
-      const tecnicos = await response.json();
-      const selectTecnicos = document.getElementById('tecnicoId');
-
-      tecnicos.forEach(tecnico => {
-        const option = document.createElement('option');
-        option.value = tecnico.id;
-        option.text = tecnico.nome;
-        selectTecnicos.add(option);
-      });
-    } catch (error) {
-      console.error('Erro ao buscar técnicos:', error);
-    }
-  }
-
-  // Chama a função para carregar os técnicos quando a página carrega
-  carregarTecnicos();
-
   const formRelatorio = document.getElementById('form-relatorio');
   formRelatorio.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -87,7 +74,6 @@
     const tecnicoId = document.getElementById('tecnicoId').value;
 
     try {
-      // Construir a URL com os parâmetros de filtro
       const url = new URL('http://localhost:3000/relatorios/produtividade');
       if (inicio) {
         url.searchParams.append('inicio', inicio);
@@ -99,31 +85,18 @@
         url.searchParams.append('tecnicoId', tecnicoId);
       }
 
-      // Criar um AbortController para cancelar a requisição se necessário
-      const controller = new AbortController();
-      const signal = controller.signal;
-
-      // Adicionar um evento para abortar a requisição quando o usuário sair da página
-      window.addEventListener('unload', () => controller.abort());
-
-      // Fazer a requisição para a API
-      const response = await fetch(url, { signal });
+      const response = await fetch(url);
       const data = await response.json();
 
       if (response.ok) {
-        // Exibir o relatório
         exibirRelatorio(data.relatorio);
       } else {
         console.error('Erro ao gerar relatório:', data.error);
-        // Exibir mensagem de erro ao usuário (implementar)
+        // Exibir mensagem de erro ao usuário
       }
     } catch (error) {
-      if (error.name === 'AbortError') {
-        console.log('Requisição abortada');
-      } else {
-        console.error('Erro ao gerar relatório:', error);
-        // Exibir mensagem de erro ao usuário (implementar)
-      }
+      console.error('Erro ao gerar relatório:', error);
+      // Exibir mensagem de erro ao usuário
     }
   });
 
@@ -138,16 +111,11 @@
 
     const tabela = document.createElement('table');
     const cabecalho = tabela.insertRow();
-    cabecalho.innerHTML = '<th>Número da OS</th><th>Cliente</th><th>Status</th><th>Técnico</th><th>Data</th>'; // Adicionei a coluna "Data"
+    cabecalho.innerHTML = '<th>Número da OS</th><th>Cliente</th><th>Status</th><th>Técnico</th>';
 
     relatorio.forEach(conserto => {
       const linha = tabela.insertRow();
-      linha.innerHTML = `
-        <td>${conserto.numeroOS}</td>
-        <td>${conserto.nomeCliente}</td>
-        <td>${conserto.status}</td>
-        <td>${conserto.responsavel ? conserto.responsavel.nome : 'Não atribuído'}</td>
-        <td>${new Date(conserto.createdAt).toLocaleDateString()}</td>`; // Formata a data
+      linha.innerHTML = `<td>${conserto.numeroOS}</td><td>${conserto.cliente}</td><td>${conserto.status}</td><td>${conserto.tecnico}</td>`;
     });
 
     relatorioDiv.appendChild(tabela);

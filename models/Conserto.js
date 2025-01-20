@@ -35,10 +35,6 @@ const Conserto = sequelize.define('Conserto', {
   status: {
     type: DataTypes.STRING,
     defaultValue: "Pendente"
-  },
-  pecasUtilizadas: {
-    type: DataTypes.JSON,
-    allowNull: true
   }
 });
 
@@ -46,8 +42,8 @@ const Conserto = sequelize.define('Conserto', {
 Conserto.belongsTo(Tecnico, { as: "responsavel" });
 
 // Métodos de instância
-Conserto.criarConserto = async function (numeroOS,protocolo,nomeCliente,telefoneCliente,equipamentoUtilizado,descricaoProblema,pecasUtilizadas,responsavelId) {
-  return await Conserto.create({ numeroOS, protocolo, nomeCliente, telefoneCliente, equipamentoUtilizado, descricaoProblema, pecasUtilizadas, responsavelId });
+Conserto.criarConserto = async function (numeroOS,protocolo,nomeCliente,telefoneCliente,equipamentoUtilizado,descricaoProblema,responsavelId) {
+  return await Conserto.create({ numeroOS, protocolo, nomeCliente, telefoneCliente, equipamentoUtilizado, descricaoProblema, responsavelId });
 };
 
 Conserto.prototype.getOS = function () {
