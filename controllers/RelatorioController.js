@@ -2,6 +2,7 @@ const express = require("express");
 const Conserto = require("../models/Conserto");
 const Tecnico = require("../models/Tecnico");
 const router = express.Router();
+const { Op } = require("sequelize");
 
 // Gerar relatório de produtividade
 router.get("/produtividade", async (req, res) => {
@@ -13,17 +14,27 @@ router.get("/produtividade", async (req, res) => {
       include: [{ model: Tecnico, as: "responsavel" }],
     };
 
-    if (inicio && fim) filtros.where.createdAt = { $between: [new Date(inicio), new Date(fim)] };
-    if (tecnicoId) filtros.where.responsavelId = tecnicoId;
+    const consertos = await Conserto.findAll({
+      where: {
+        createdAt: {
+          [Op.gte]: new Date(inicio),
+          [Op.lte]: new Date(fim),
+        },
+        responsavelId: tecnicoId,
+      }
+    });
 
-    const consertos = await Conserto.findAll(filtros);
+    console.log(consertos);
 
     const relatorio = consertos.map((conserto) => ({
       numeroOS: conserto.numeroOS,
       cliente: conserto.nomeCliente,
       status: conserto.status,
-      tecnico: conserto.responsavel?.nome || "Não atribuído",
+      tecnico: conserto.responsavelId,
+      data: conserto.createdAt,
     }));
+
+    console.log(relatorio);
 
     res.json({ message: "Relatório gerado com sucesso!", relatorio });
   } catch (error) {

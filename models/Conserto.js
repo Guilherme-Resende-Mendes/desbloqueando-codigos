@@ -35,6 +35,10 @@ const Conserto = sequelize.define('Conserto', {
   status: {
     type: DataTypes.STRING,
     defaultValue: "Pendente"
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false
   }
 });
 
@@ -62,5 +66,9 @@ Conserto.prototype.atualizarStatus = async function (novoStatus) {
 Conserto.prototype.apagarConserto = async function () {
   await this.destroy();
 };
+
+Conserto.prototype.getData = async function () {
+  await this.createdAt;
+}
 
 module.exports = Conserto;

@@ -40,6 +40,7 @@
 <body>
 
 <h1>Relatórios</h1>
+<button onclick="window.location.href = 'Home.html';">Voltar para a página anterior</button>
 
 <h2>Gerar Relatório de Produtividade</h2>
 <form id="form-relatorio">
@@ -140,14 +141,14 @@
     const cabecalho = tabela.insertRow();
     cabecalho.innerHTML = '<th>Número da OS</th><th>Cliente</th><th>Status</th><th>Técnico</th><th>Data</th>'; // Adicionei a coluna "Data"
 
-    relatorio.forEach(conserto => {
+    relatorio.forEach(relatorio => {
       const linha = tabela.insertRow();
       linha.innerHTML = `
-        <td>${conserto.numeroOS}</td>
-        <td>${conserto.nomeCliente}</td>
-        <td>${conserto.status}</td>
-        <td>${conserto.responsavel ? conserto.responsavel.nome : 'Não atribuído'}</td>
-        <td>${new Date(conserto.createdAt).toLocaleDateString()}</td>`; // Formata a data
+        <td>${relatorio.numeroOS}</td>
+        <td>${relatorio.cliente}</td>
+        <td>${relatorio.status}</td>
+        <td>${relatorio.tecnico}</td>
+        <td>${new Date(relatorio.data).toLocaleDateString()}</td>`; // Formata a data
     });
 
     relatorioDiv.appendChild(tabela);
