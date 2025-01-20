@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Técnicos</title>
+</head>
+<body>
+
+<h1>Gerenciar Técnicos</h1>
+
+<h2>Lista de Técnicos</h2>
+<ul id="lista-tecnicos"></ul>
+
+<script defer>
+  const API_URL = '/tecnicos';
+
+  // Função para carregar técnicos
+  async function carregarTecnicos() {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`Erro ao obter técnicos: ${response.statusText}`);
+      }
+      const tecnicos = await response.json();
+      const listaTecnicos = document.getElementById('lista-tecnicos');
+      listaTecnicos.innerHTML = '';
+
+      tecnicos.forEach(tecnico => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <b>${tecnico.nome}</b> (CPF: ${tecnico.cpf})<br>
+          Especialidades: ${(tecnico.especialidades || []).join(', ')}
+          <button onclick="atualizarEspecialidades(${tecnico.id})">Atualizar Especialidades</button>
+          <button onclick="excluirTecnico(${tecnico.id})">Excluir</button>
+        `;
+        listaTecnicos.appendChild(li);
+      });
+    } catch (error) {
+      alert(`Erro ao carregar técnicos: ${error.message}`);
+    }
+  }
+
+  // Função para atualizar especialidades
+  async function atualizarEspecialidades(id) {
+    const especialidades = prompt('Digite as novas especialidades separadas por vírgula:');
+    if (!especialidades) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${id}/especialidades`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ especialidades: especialidades.split(',').map(e => e.trim()) }),
+      });
+      if (!response.ok) {
+        throw new Error(`Erro ao atualizar especialidades: ${response.statusText}`);
+      }
+      alert('Especialidades atualizadas com sucesso!');
+      carregarTecnicos();
+    } catch (error) {
+      alert(`Erro ao atualizar especialidades: ${error.message}`);
+    }
+  }
+
+  // Função para excluir técnico
+  async function excluirTecnico(id) {
+    if (!confirm(`Tem certeza que deseja excluir o técnico com ID ${id}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error(`Erro ao excluir técnico: ${response.statusText}`);
+      }
+      alert('Técnico excluído com sucesso!');
+      carregarTecnicos();
+    } catch (error) {
+      alert(`Erro ao excluir técnico: ${error.message}`);
+    }
+  }
+
+  // Carrega a lista de técnicos ao carregar a página
+  document.addEventListener('DOMContentLoaded', carregarTecnicos);
+</script>
+
+</body>
+</html>
