@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Técnicos</title>
+</head>
+<body>
+
+<h1>Técnicos</h1>
+
+<h2>Lista de Técnicos</h2>
+<ul id="lista-tecnicos"></ul>
+
+<script defer>
+  // Função para carregar a lista de técnicos
+  async function carregarTecnicos() {
+    try {
+      const response = await fetch('/tecnicos');
+      if (!response.ok) {
+        throw new Error(`Erro ao obter dados: ${response.statusText}`);
+      }
+      const tecnicos = await response.json();
+
+      const listaTecnicos = document.getElementById('lista-tecnicos');
+      listaTecnicos.innerHTML = ''; // Limpa a lista antes de adicionar os técnicos
+
+      tecnicos.forEach(tecnico => {
+        const li = document.createElement('li');
+
+        const nome = document.createElement('b');
+        nome.textContent = tecnico.nome;
+
+        const cpf = document.createElement('span');
+        cpf.textContent = ` (CPF: ${tecnico.cpf})`;
+
+        const especialidades = document.createElement('div');
+        especialidades.textContent = `Especialidades: ${tecnico.especialidades.join(', ')}`;
+
+        const btnAtualizar = document.createElement('button');
+        btnAtualizar.textContent = 'Atualizar Especialidades';
+        btnAtualizar.onclick = () => exibirModalAtualizarEspecialidades(tecnico.id);
+
+        const btnExcluir = document.createElement('button');
+        btnExcluir.textContent = 'Excluir';
+        btnExcluir.onclick = () => excluirTecnico(tecnico.id);
+
+        li.appendChild(nome);
+        li.appendChild(cpf);
+        li.appendChild(especialidades);
+        li.appendChild(btnAtualizar);
+        li.appendChild(btnExcluir);
+
+        listaTecnicos.appendChild(li);
+      });
+    } catch (error) {
+      alert(`Erro ao carregar técnicos: ${error.message}`);
+    }
+  }
+
+  // Função para exibir o modal de atualização de especialidades
+  function exibirModalAtualizarEspecialidades(id) {
+    console.log(`Exibir modal para atualizar especialidades do técnico ${id}`);
+    // Lógica do modal pode ser implementada aqui
+  }
+
+  // Função para excluir técnico
+  async function excluirTecnico(id) {
+    if (!confirm(`Tem certeza que deseja excluir o técnico com ID ${id}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/tecnicos/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error(`Erro ao excluir técnico: ${response.statusText}`);
+      }
+      alert('Técnico excluído com sucesso!');
+      carregarTecnicos(); // Atualiza a lista de técnicos
+    } catch (error) {
+      alert(`Erro ao excluir técnico: ${error.message}`);
+    }
+  }
+
+  // Carrega a lista de técnicos ao carregar a página
+  document.addEventListener('DOMContentLoaded', carregarTecnicos);
+</script>
+
+</body>
+</html>
