@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Peças</title>
+</head>
+<body>
+
+<h1>Gerenciar Peças</h1>
+<button onclick="window.location.href = 'Home.html';">Voltar para a página anterior</button>
+
+<h2>Lista de Peças</h2>
+<ul id="lista-pecas"></ul>
+
+<h2>Atualizar Estoque</h2>
+<form id="atualizar-estoque-form">
+  <label for="peca-id">ID da Peça:</label>
+  <input type="number" id="peca-id" required>
+  
+  <label for="quantidade">Quantidade:</label>
+  <input type="number" id="quantidade" required>
+  
+  <button type="submit">Atualizar Estoque</button>
+</form>
+
+<script defer>
+  const API_URL = '/pecas';
+
+  // Função para carregar peças
+  async function carregarPecas() {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`Erro ao obter peças: ${response.statusText}`);
+      }
+      const pecas = await response.json();
+      const listaPecas = document.getElementById('lista-pecas');
+      listaPecas.innerHTML = '';
+
+      pecas.forEach(peca => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <b>${peca.descricao}</b> (Código: ${peca.codigo})<br>
+          Quantidade em Estoque: ${peca.qtdeEstoque}<br>
+          Fornecedor: ${peca.fornecedor}
+          <button onclick="atualizarEstoque(${peca.id})">Atualizar Estoque</button>
+          <button onclick="excluirPeca(${peca.id})">Excluir</button>
+        `;
+        listaPecas.appendChild(li);
+      });
+    } catch (error) {
+      alert(`Erro ao carregar peças: ${error.message}`);
+    }
+  }
+
+  // Função para atualizar estoque de uma peça
+  async function atualizarEstoque(id) {
+    const quantidade = prompt('Digite a nova quantidade de estoque:');
+    if (!quantidade) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${id}/estoque`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantidade: parseInt(quantidade) }),
+      });
+      if (!response.ok) {
+        throw new Error(`Erro ao atualizar estoque: ${response.statusText}`);
+      }
+      alert('Estoque atualizado com sucesso!');
+      carregarPecas();
+    } catch (error) {
+      alert(`Erro ao atualizar estoque: ${error.message}`);
+    }
+  }
+
+  // Função para excluir peça
+  async function excluirPeca(id) {
+    if (!confirm(`Tem certeza que deseja excluir a peça com ID ${id}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error(`Erro ao excluir peça: ${response.statusText}`);
+      }
+      alert('Peça excluída com sucesso!');
+      carregarPecas();
+    } catch (error) {
+      alert(`Erro ao excluir peça: ${error.message}`);
+    }
+  }
+
+  // Enviar form para atualizar estoque
+  document.getElementById('atualizar-estoque-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const pecaId = document.getElementById('peca-id').value;
+    const quantidade = document.getElementById('quantidade').value;
+
+    if (!pecaId || !quantidade) {
+      return alert('Preencha todos os campos!');
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${pecaId}/estoque`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantidade: parseInt(quantidade) }),
+      });
+      if (!response.ok) {
+        throw new Error(`Erro ao atualizar estoque: ${response.statusText}`);
+      }
+      alert('Estoque atualizado com sucesso!');
+      carregarPecas();
+    } catch (error) {
+      alert(`Erro ao atualizar estoque: ${error.message}`);
+    }
+  });
+
+  // Carrega as peças ao carregar a página
+  document.addEventListener('DOMContentLoaded', carregarPecas);
+</script>
+
+</body>
+</html>

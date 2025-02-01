@@ -35,4 +35,19 @@ router.put('/:id/estoque', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const peca = await Peca.findByPk(id);
+    if (!peca) {
+      return res.status(404).json({ error: 'Peça não encontrada' });
+    }
+    await peca.destroy();
+    res.json({ message: 'Peça excluída com sucesso!' });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao excluir peça', details: error.message });
+  }
+});
+
+
 module.exports = router;
