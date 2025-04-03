@@ -1,0 +1,6 @@
+projectKey=Desbloqueando-codigos
+serverUrl=http://localhost:9000
+serverVersion=25.2.0.102705
+dashboardUrl=http://localhost:9000/dashboard?id=Desbloqueando-codigos
+ceTaskId=bd26c9c5-3d09-403a-ac91-6d320d7c83ed
+ceTaskUrl=http://localhost:9000/api/ce/task?id=bd26c9c5-3d09-403a-ac91-6d320d7c83ed
